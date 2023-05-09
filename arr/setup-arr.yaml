@@ -1,0 +1,23 @@
+---
+- name: setup them arr apps
+  hosts: media
+  remote_user: root
+
+  tasks:
+  - name: create prowlarr user
+    ansible.builtin.user:
+      name: prowlarr
+      groups: prowlarr
+      state: present
+      remove: false
+      create_home: true
+      home: /var/lib/prowlarr
+  - name: curl the prowlarr executable
+    ansible.builtin.get_url:
+      url: http://prowlarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64
+      dest: /root/prowlarr.tar.gz
+  - name: extract prowlarr
+    ansible.builtin.unarchive:
+      remote_src: yes
+      src: /root/prowlarr.tar.gz
+      dest: /root/
